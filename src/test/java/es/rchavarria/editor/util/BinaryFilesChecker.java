@@ -12,8 +12,13 @@ public class BinaryFilesChecker {
     private static final Logger LOGGER = LoggerFactory.getLogger(BinaryFilesChecker.class);
 
     public boolean areFilesEqual(final File expected, final File actual) throws IOException {
+        LOGGER.debug("Comparing files: '{}' and '{}'", expected.getName(), actual.getName());
         boolean haveSameLength = compareLength(expected, actual);
         return haveSameLength ? compareBytesPairWise(expected, actual) : false;
+    }
+
+    private boolean compareLength(final File expected, final File actual) {
+        return expected.length() == actual.length();
     }
 
     private boolean compareBytesPairWise(final File expected, final File actual) throws IOException {
@@ -23,16 +28,12 @@ public class BinaryFilesChecker {
         do {
             b1 = i1.read();
             b2 = i2.read();
-            LOGGER.debug("{} == {} ?", b1, b2);
+            // LOGGER.debug("{} == {} ?", b1, b2);
         } while (b1 == b2 && b1 != -1);
         i1.close();
         i2.close();
 
         // true only if end of file is reached
         return b1 == -1 && b2 == -1;
-    }
-
-    private boolean compareLength(final File expected, final File actual) {
-        return expected.length() == actual.length();
     }
 }

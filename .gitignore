@@ -1,3 +1,7 @@
+#
+# see http://help.github.com/ignore-files/
+#
+
 #	eclipse files	#
 #####################
 .classpath
