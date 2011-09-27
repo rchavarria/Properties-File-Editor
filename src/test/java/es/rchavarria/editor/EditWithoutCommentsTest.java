@@ -3,8 +3,6 @@ package es.rchavarria.editor;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,28 +10,22 @@ import org.junit.Test;
 
 import es.rchavarria.editor.session.EditorSession;
 import es.rchavarria.editor.session.EditorSessionFactory;
+import es.rchavarria.editor.tests.util.FilesHelper;
 import es.rchavarria.editor.util.BinaryFilesChecker;
-import es.rchavarria.editor.util.FileLinesWriter;
 
 public class EditWithoutCommentsTest {
+
+    private FilesHelper helper = new FilesHelper();
 
     @Test
     public void testOneLine() throws Exception {
         String propertyToChange = "first.prop";
         String newValue = "Expected value";
 
-        File actual = createFileWithLines(Arrays.asList("first.prop=First value"));
-        File expected = createFileWithLines(Arrays.asList("first.prop=Expected value"));
+        File actual = helper.createTmpWithLines(Arrays.asList("first.prop=First value"));
+        File expected = helper.createTmpWithLines(Arrays.asList("first.prop=Expected value"));
 
         updateAndCompare(propertyToChange, newValue, actual, expected);
-    }
-
-    private File createFileWithLines(final List<String> lines) throws IOException {
-        File file = File.createTempFile("EditorTest", ".txt");
-        FileLinesWriter writer = new FileLinesWriter(new FileOutputStream(file));
-        writer.writeLines(lines);
-
-        return file;
     }
 
     private void updateAndCompare(final String propertyToChange, final String newValue, final File actual,
@@ -54,8 +46,9 @@ public class EditWithoutCommentsTest {
         String propertyToChange = "second.prop";
         String newValue = "Expected value";
 
-        File actual = createFileWithLines(Arrays.asList("first.prop=First value", "second.prop=Other value"));
-        File expected = createFileWithLines(Arrays.asList("first.prop=First value", "second.prop=Expected value"));
+        File actual = helper.createTmpWithLines(Arrays.asList("first.prop=First value", "second.prop=Other value"));
+        File expected = helper
+                .createTmpWithLines(Arrays.asList("first.prop=First value", "second.prop=Expected value"));
 
         updateAndCompare(propertyToChange, newValue, actual, expected);
     }
@@ -69,11 +62,11 @@ public class EditWithoutCommentsTest {
 
         List<String> actualLines = Arrays.asList("first.prop=First value", "second.prop=Other value", actualProperty,
                 "this_is-the.fourth=and THIS is the value");
-        File actual = createFileWithLines(actualLines);
+        File actual = helper.createTmpWithLines(actualLines);
 
         List<String> expectedLines = Arrays.asList("first.prop=First value", "second.prop=Other value",
                 expectedProperty, "this_is-the.fourth=and THIS is the value");
-        File expected = createFileWithLines(expectedLines);
+        File expected = helper.createTmpWithLines(expectedLines);
 
         updateAndCompare(propertyToChange, newValue, actual, expected);
     }
